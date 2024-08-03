@@ -47,7 +47,8 @@ async def startup_process():
 ==================================
     تم تفعيل سورس الجوكر ✓
         برعاية العقرب (:
-=================================="")
+==================================
+"")
     await verifyLoggerGroup()
     await saves()
     await add_bot_to_logger_group(BOTLOG_CHATID)

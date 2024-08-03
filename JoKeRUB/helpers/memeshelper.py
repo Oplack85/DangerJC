@@ -568,8 +568,9 @@ async def slap(replied_user, event, DEFAULTUSER):
     """Construct a funny slap sentence !!"""
     user_id = replied_user.id
     first_name = replied_user.first_name
-    if username := replied_user.username:
-        slapped = f"@{username}"
+    if replied_user.username:
+        slapped = f"@{replied_user.username}"
+    
     else:
         slapped = f"[{first_name}](tg://user?id={user_id})"
     temp = random.choice(SLAP_TEMPLATES)

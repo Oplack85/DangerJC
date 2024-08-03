@@ -43,13 +43,11 @@ async def startup_process():
     await verifyLoggerGroup()
     await load_plugins("plugins")
     await load_plugins("assistant")
-    print("➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖")
-    print("᯽︙بـوت الجوكر يعـمل بـنجاح ")
-    print(
-        f"تم تشغيل الانلاين تلقائياً ارسل {cmdhr}الاوامر لـرؤيـة اوامر السورس\
-        \nللمسـاعدة تواصـل  https://t.me/JepthonSupport"
-    )
-    print("➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖")
+    LOGS.info(""
+==================================
+    تم تفعيل سورس الجوكر ✓
+        برعاية العقرب (:
+=================================="")
     await verifyLoggerGroup()
     await saves()
     await add_bot_to_logger_group(BOTLOG_CHATID)

@@ -27,7 +27,7 @@ from ..sql_helper.global_collection import (
 from ..sql_helper.globals import addgvar, delgvar, gvarstatus
 from .pluginmanager import load_module
 from .tools import create_supergroup
-LOGS = logging.getLogger("aljoker")
+LOGS = logging.getLogger("JoKeRUB")
 logging.getLogger('telethon').setLevel(logging.WARNING)
 ##Reda hands here
 cmdhr = Config.COMMAND_HAND_LER
@@ -75,11 +75,7 @@ async def setup_bot():
         bot_details = await l313l.tgbot.get_me()
         Config.TG_BOT_USERNAME = f"@{bot_details.username}"
         
-        app = web.AppRunner(await web_server())
-        await app.setup()
-        bind_address = "0.0.0.0"
-        redaport = Config.PORT
-        await web.TCPSite(app, bind_address, redaport).start()
+        
         l313l.me = await l313l.get_me()
         l313l.uid = l313l.tgbot.uid = utils.get_peer_id(l313l.me)
         if Config.OWNER_ID == 0:
@@ -153,24 +149,6 @@ async def mybot():
                 print(e)
     except Exception as e:
         print(e)
-
-async def ipchange():
-    """
-    Just to check if ip change or not
-    """
-    newip = requests.get("https://api.ipify.org?format=json").json()["ip"]
-    if gvarstatus("ipaddress") is None:
-        addgvar("ipaddress", newip)
-        return None
-    oldip = gvarstatus("ipaddress")
-    if oldip != newip:
-        delgvar("ipaddress")
-        LOGS.info("Ip Change detected")
-        try:
-            await l313l.disconnect()
-        except (ConnectionError, CancelledError):
-            pass
-        return "ip change"
 
 
 async def add_bot_to_logger_group(chat_id):
@@ -266,7 +244,7 @@ async def load_plugins(folder, extfolder=None):
             BOTLOG_CHATID,
             f'- تم بنجاح استدعاء الاوامر الاضافيه \n**عدد الملفات التي استدعيت:** `{success}`\n**فشل في استدعاء :** `{", ".join(failure)}`',
         )
-#شعندك هنا تبحوش ياحلو 😉
+
 #سورس الجوكر عمك
 async def aljoker_the_best(l313l, group_name):
     async for dialog in l313l.iter_dialogs():

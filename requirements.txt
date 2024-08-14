@@ -11,6 +11,7 @@ asyncio
 selenium
 Flask
 flask_restful
+schedule
 setuptools
 wheel
 cloudscraper

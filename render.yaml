@@ -7,6 +7,9 @@ services:
     buildCommand: pip install -U -r requirements.txt
     startCommand: python3 ser.py & python3 -m JoKeRUB 
     region: frankfurt
+    github:
+      repo: "Mhmd26/JCR"
+      branch: master
     envVars:
       - key: APP_ID 
         value: 9514755

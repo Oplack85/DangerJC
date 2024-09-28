@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import Column, String, UnicodeText, distinct, func
 
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 
 class CatGloballist(BASE):
@@ -25,7 +25,7 @@ class CatGloballist(BASE):
         )
 
 
-CatGloballist.__table__.create(checkfirst=True)
+CatGloballist.__table__.create(bind=engine, checkfirst=True)
 
 CATGLOBALLIST_INSERTION_LOCK = threading.RLock()
 
@@ -48,9 +48,10 @@ def add_to_list(keywoard, group_id):
 
 def rm_from_list(keywoard, group_id):
     with CATGLOBALLIST_INSERTION_LOCK:
-        if broadcast_group := SESSION.query(CatGloballist).get(
+        broadcast_group = SESSION.query(CatGloballist).get(
             (keywoard, str(group_id))
-        ):
+        )
+        if broadcast_group:
             if str(group_id) in GLOBALLIST_SQL_.GLOBALLIST_VALUES.get(keywoard, set()):
                 GLOBALLIST_SQL_.GLOBALLIST_VALUES.get(keywoard, set()).remove(
                     str(group_id)

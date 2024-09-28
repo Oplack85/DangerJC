@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, UnicodeText
 
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 
 class Bot_Starters(BASE):
@@ -17,7 +17,7 @@ class Bot_Starters(BASE):
         self.username = username
 
 
-Bot_Starters.__table__.create(checkfirst=True)
+Bot_Starters.__table__.create(bind=engine, checkfirst=True)
 
 
 def add_starter_to_db(
@@ -53,7 +53,8 @@ def del_starter_from_db(user_id):
 
 def get_starter_details(user_id):
     try:
-        if _result := SESSION.query(Bot_Starters).get(str(user_id)):
+        _result = SESSION.query(Bot_Starters).get(str(user_id))
+        if _result:
             return _result
         return None
     finally:

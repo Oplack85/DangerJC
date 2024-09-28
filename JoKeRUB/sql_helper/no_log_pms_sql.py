@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Numeric
 
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 
 class NOLogPMs(BASE):
@@ -11,7 +11,7 @@ class NOLogPMs(BASE):
         self.chat_id = chat_id
 
 
-NOLogPMs.__table__.create(checkfirst=True)
+NOLogPMs.__table__.create(bind=engine, checkfirst=True)
 
 
 def is_approved(chat_id):
@@ -28,8 +28,8 @@ def approve(chat_id):
     SESSION.add(adder)
     SESSION.commit()
 
-
 def disapprove(chat_id):
-    if rem := SESSION.query(NOLogPMs).get(chat_id):
+    rem = SESSION.query(NOLogPMs).get(chat_id)
+    if rem:
         SESSION.delete(rem)
         SESSION.commit()

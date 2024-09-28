@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import Column, PickleType, UnicodeText, distinct, func
 
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 
 class Cat_GlobalCollection(BASE):
@@ -28,7 +28,7 @@ class Cat_GlobalCollection(BASE):
         )
 
 
-Cat_GlobalCollection.__table__.create(checkfirst=True)
+Cat_GlobalCollection.__table__.create(bind=engine, checkfirst=True)
 
 CAT_GLOBALCOLLECTION = threading.RLock()
 
@@ -52,9 +52,10 @@ def add_to_collectionlist(keywoard, contents):
 
 def rm_from_collectionlist(keywoard, contents):
     with CAT_GLOBALCOLLECTION:
-        if keyword_items := SESSION.query(Cat_GlobalCollection).get(
+        keyword_items = SESSION.query(Cat_GlobalCollection).get(
             (keywoard, tuple(contents))
-        ):
+        )
+        if keyword_items:
             if tuple(contents) in COLLECTION_SQL_.CONTENTS_LIST.get(keywoard, set()):
                 COLLECTION_SQL_.CONTENTS_LIST.get(keywoard, set()).remove(
                     tuple(contents)

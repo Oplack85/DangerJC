@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Numeric, String, UnicodeText
 
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 
 class Filter(BASE):
@@ -24,7 +24,7 @@ class Filter(BASE):
         )
 
 
-Filter.__table__.create(checkfirst=True)
+Filter.__table__.create(bind=engine, checkfirst=True)
 
 
 def get_filter(chat_id, keyword):
@@ -68,6 +68,8 @@ def remove_filter(chat_id, keyword):
 
 
 def remove_all_filters(chat_id):
-    if saved_filter := SESSION.query(Filter).filter(Filter.chat_id == str(chat_id)):
-        saved_filter.delete()
+    saved_filter = SESSION.query(Filter).filter(Filter.chat_id == str(chat_id)).all()
+    if saved_filter:
+        for filter_entry in saved_filter:
+            SESSION.delete(filter_entry)
         SESSION.commit()

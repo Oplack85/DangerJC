@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, delete
 from sqlalchemy.orm.exc import NoResultFound
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 class bankc(BASE):
     __tablename__ = "autogrouptable"
@@ -10,7 +10,7 @@ class bankc(BASE):
         self.agroup = str(agroup)
 
 
-bankc.__table__.create(checkfirst=True)
+bankc.__table__.create(bind=engine, checkfirst=True)
 
 
 def auto_g(
@@ -37,10 +37,11 @@ def del_auto_g():
     #SESSION.close()
     return stmt
 
+
 def get_auto_g():
     try:
-        if _result := SESSION.query(bankc).one().agroup:
-            return _result
+        _result = SESSION.query(bankc).one().agroup
+        return _result
     except NoResultFound:
         return None
     finally:

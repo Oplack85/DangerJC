@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import Boolean, Column, Integer, String, UnicodeText, distinct, func
 
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 
 class Warns(BASE):
@@ -37,8 +37,8 @@ class WarnSettings(BASE):
         return f"<{self.chat_id} has {self.warn_limit} possible warns.>"
 
 
-Warns.__table__.create(checkfirst=True)
-WarnSettings.__table__.create(checkfirst=True)
+Warns.__table__.create(bind=engine, checkfirst=True)
+WarnSettings.__table__.create(bind=engine, checkfirst=True)
 
 WARN_INSERTION_LOCK = threading.RLock()
 WARN_SETTINGS_LOCK = threading.RLock()
@@ -72,13 +72,13 @@ def remove_warn(user_id, chat_id):
         return removed
 
 
-def reset_warns(user_id, chat_id):
-    with WARN_INSERTION_LOCK:
-        if warned_user := SESSION.query(Warns).get((user_id, str(chat_id))):
-            warned_user.num_warns = 0
-            warned_user.reasons = ""
-            SESSION.add(warned_user)
-            SESSION.commit()
+def get_warn_setting(chat_id):
+    try:
+        setting = SESSION.query(WarnSettings).get(str(chat_id))
+        if setting:
+            return setting.warn_limit, setting.soft_warn
+        return 3, False
+    finally:
         SESSION.close()
 
 

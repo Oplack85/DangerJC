@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, UnicodeText
 
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 
 class ChatBot(BASE):
@@ -30,7 +30,7 @@ class ChatBot(BASE):
         )
 
 
-ChatBot.__table__.create(checkfirst=True)
+ChatBot.__table__.create(bind=engine, checkfirst=True)
 
 
 def is_added(chat_id, user_id):
@@ -89,12 +89,15 @@ def remove_ai(chat_id, user_id):
 
 
 def remove_users(chat_id):
-    if saved_filter := SESSION.query(ChatBot).filter(ChatBot.chat_id == str(chat_id)):
-        saved_filter.delete()
+    saved_filter = SESSION.query(ChatBot).filter(ChatBot.chat_id == str(chat_id)).all()
+    if saved_filter:
+        for filter_entry in saved_filter:
+            SESSION.delete(filter_entry)
         SESSION.commit()
 
-
 def remove_all_users():
-    if saved_filter := SESSION.query(ChatBot):
-        saved_filter.delete()
+    saved_filter = SESSION.query(ChatBot).all()
+    if saved_filter:
+        for filter_entry in saved_filter:
+            SESSION.delete(filter_entry)
         SESSION.commit()

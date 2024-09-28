@@ -1,5 +1,5 @@
 try:
-    from . import BASE, SESSION
+    from . import BASE, SESSION, engine
 except ImportError as e:
     raise Exception("Hello!") from e
 from sqlalchemy import Column, String
@@ -15,7 +15,7 @@ class Mute(BASE):
         self.chat_id = str(chat_id)
 
 
-Mute.__table__.create(checkfirst=True)
+Mute.__table__.create(bind=engine, checkfirst=True)
 
 
 def is_muted(sender, chat_id):
@@ -29,7 +29,9 @@ def mute(sender, chat_id):
     SESSION.commit()
 
 
+
 def unmute(sender, chat_id):
-    if rem := SESSION.query(Mute).get((str(sender), str(chat_id))):
+    rem = SESSION.query(Mute).get((str(sender), str(chat_id)))
+    if rem:
         SESSION.delete(rem)
         SESSION.commit()

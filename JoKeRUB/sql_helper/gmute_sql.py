@@ -1,5 +1,5 @@
 try:
-    from . import BASE, SESSION
+    from . import BASE, SESSION, engine
 except ImportError as e:
     raise Exception("Hello!") from e
 
@@ -14,7 +14,7 @@ class GMute(BASE):
         self.sender = str(sender)
 
 
-GMute.__table__.create(checkfirst=True)
+GMute.__table__.create(bind=engine, checkfirst=True)
 
 
 def is_gmuted(sender_id):
@@ -30,9 +30,3 @@ def gmute(sender):
     adder = GMute(str(sender))
     SESSION.add(adder)
     SESSION.commit()
-
-
-def ungmute(sender):
-    if rem := SESSION.query(GMute).get((str(sender))):
-        SESSION.delete(rem)
-        SESSION.commit()

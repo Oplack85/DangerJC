@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import Column, String, UnicodeText, distinct, func
 
-from . import BASE, SESSION
+from . import BASE, SESSION, engine
 
 
 class CatBroadcast(BASE):
@@ -25,7 +25,7 @@ class CatBroadcast(BASE):
         )
 
 
-CatBroadcast.__table__.create(checkfirst=True)
+CatBroadcast.__table__.create(bind=engine, checkfirst=True)
 
 CATBROADCAST_INSERTION_LOCK = threading.RLock()
 
@@ -46,12 +46,12 @@ def add_to_broadcastlist(keywoard, group_id):
         SESSION.commit()
         BROADCAST_SQL_.BROADCAST_CHANNELS.setdefault(keywoard, set()).add(str(group_id))
 
-
 def rm_from_broadcastlist(keywoard, group_id):
     with CATBROADCAST_INSERTION_LOCK:
-        if broadcast_group := SESSION.query(CatBroadcast).get(
+        broadcast_group = SESSION.query(CatBroadcast).get(
             (keywoard, str(group_id))
-        ):
+        )
+        if broadcast_group:
             if str(group_id) in BROADCAST_SQL_.BROADCAST_CHANNELS.get(keywoard, set()):
                 BROADCAST_SQL_.BROADCAST_CHANNELS.get(keywoard, set()).remove(
                     str(group_id)

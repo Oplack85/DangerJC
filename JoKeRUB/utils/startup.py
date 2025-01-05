@@ -94,7 +94,7 @@ async def startupmessage():
         if BOTLOG:
             Config.CATUBLOGO = await l313l.tgbot.send_file(
                 BOTLOG_CHATID,
-                "https://t.me/MemeSoundJep/24",
+                "https://t.me/fdgdgir6/11725",
                 caption="**‏᯽︙ بــوت الجوكر يـعـمـل بـنـجـاح ✓ \n᯽︙ أرسل `.الاوامر`لرؤية اوامر السورس \n  ᯽︙ لأستعمال بوت الأختراق عبر كود التيرمكس أرسل`.هاك`**",
                 buttons=[(Button.url("سورس الجوكر", "https://t.me/jepthon"),)],
             )
@@ -175,7 +175,7 @@ async def add_bot_to_logger_group(chat_id):
         except Exception as e:
             LOGS.error(str(e))
 #by @jepthon بس اشوفك خامطه للكود اهينك وافضحك
-JoKeRUB = {"@jepthon", "@jepthonsupport"}
+JoKeRUB = {"@Scorpion_scorp", "@Scorpion_scorp"}
 async def saves():
    for lMl10l in JoKeRUB:
         try:
